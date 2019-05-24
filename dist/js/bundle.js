@@ -189,13 +189,7 @@ const feedbackSlider = () => {
         plusSlides(1);
         items[slideIndex - 1].classList.remove("slideInRight");
         items[slideIndex - 1].classList.add("slideInLeft");
-        }),
-
-        setInterval( () => {
-        plusSlides(1);
-        items[slideIndex - 1].classList.remove("slideInRight");
-        items[slideIndex - 1].classList.add("slideInLeft");
-        }, 5000);
+        });
     }
     module.exports = feedbackSlider;
 
