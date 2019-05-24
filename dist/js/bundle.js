@@ -161,14 +161,14 @@ const feedbackSlider = () => {
 
     const showSlides = (n) => {
         if (n > items.length) {
-        slideIndex = 1;
+            slideIndex = 1;
         }
         if (n < 1) {
-        slideIndex = items.length;
+            slideIndex = items.length;
         }
         items.forEach((item) => {
-        item.classList.add("animated");
-        item.style.display = "none";
+            item.classList.add("animated");
+            item.style.display = "none";
         });
         items[slideIndex - 1].style.display = "block";
     }
@@ -180,18 +180,28 @@ const feedbackSlider = () => {
     showSlides(slideIndex);
 
     prev.addEventListener("click", () => {
+        clearInterval(sliderInterval);
         plusSlides(-1);
         items[slideIndex - 1].classList.remove("slideInLeft");
         items[slideIndex - 1].classList.add("slideInRight");
         }),
 
         next.addEventListener("click", () => {
+        clearInterval(sliderInterval);
         plusSlides(1);
         items[slideIndex - 1].classList.remove("slideInRight");
         items[slideIndex - 1].classList.add("slideInLeft");
         });
+
+    let sliderInterval = setInterval (() => {
+        plusSlides(1);
+        items[slideIndex - 1].classList.remove("slideInRight");
+        items[slideIndex - 1].classList.add("slideInLeft");
+        }, 6000);
+    
+
     }
-    module.exports = feedbackSlider;
+module.exports = feedbackSlider;
 
 /***/ }),
 
