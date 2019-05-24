@@ -30,7 +30,7 @@ const accordion = () => {
       });   
    });  
 
-   const setAccord = (element, action) => {
+   function setAccord (element, action) {
       if (action == 'add') {
          element.classList.add('hidden-lg');
          element.classList.add('hidden-md');   

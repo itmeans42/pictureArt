@@ -125,7 +125,7 @@ const accordion = () => {
       });   
    });  
 
-   const setAccord = (element, action) => {
+   function setAccord (element, action) {
       if (action == 'add') {
          element.classList.add('hidden-lg');
          element.classList.add('hidden-md');   
@@ -210,8 +210,6 @@ const feedbackSlider = () => {
 
 window.addEventListener('DOMContentLoaded', function () {
 
-    'use strict'
-    
     let accordion = __webpack_require__(/*! ./parts/accordion.js */ "./src/js/parts/accordion.js"),
         feedbackSlider = __webpack_require__(/*! ./parts/feedbackSlider.js */ "./src/js/parts/feedbackSlider.js");
 
