@@ -334,6 +334,17 @@ const popupGift = () => {
         document.body.style.overflow = "";
     }
 
+    const parentsOfElements = (elem, click) => {
+        let current = elem;
+        while (current != null){
+        if (current.classList.contains(click)){
+            return true;
+        }
+        current = current.parentElement;
+        }
+        return false;
+    }
+
     gift.addEventListener("click", () => {
     openPopup();
     });
