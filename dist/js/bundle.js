@@ -146,6 +146,61 @@ module.exports = accordion;
 
 /***/ }),
 
+/***/ "./src/js/parts/calc.js":
+/*!******************************!*\
+  !*** ./src/js/parts/calc.js ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+const calc = () => {
+    let size = document.querySelector('#size'),
+        material = document.querySelector('#material'),
+        options = document.querySelector('#options'),
+        calcPrice = document.querySelector('.calc-price')
+        promocode = document.querySelector('.promocode');
+
+    let sizeValues = {1: 1000, 2: 2000, 3: 3000, 4: 4000};
+
+    let materialValues = {1: 1000, 2: 2000, 3: 3000};
+
+    let optionsValues = {1: 500, 2: 500, 3: 500};
+    
+    const countPrice = () => {
+        if (size.options.selectedIndex > 0 && material.options.selectedIndex > 0) {
+            
+            let price = sizeValues[size.options.selectedIndex] + materialValues[material.options.selectedIndex];
+
+            if (options.options.selectedIndex > 0) {
+                price = price + optionsValues[options.selectedIndex];
+            }
+            if (promocode.value === "IWANTPOPART") {
+                price = price * 0.7;
+            }
+            calcPrice.textContent = price;
+        } else {
+            calcPrice.textContent = "Для расчета нужно выбрать размер картины и материал картины";
+        }
+    }
+        
+    size.addEventListener('change', () => {
+        countPrice();
+    });
+    material.addEventListener('change', () => {
+        countPrice();
+    });
+    options.addEventListener('change', () => {
+        countPrice();
+    });
+    promocode.addEventListener('input', () => {
+        countPrice();
+    });
+}
+
+module.exports = calc;
+
+/***/ }),
+
 /***/ "./src/js/parts/feedbackSlider.js":
 /*!****************************************!*\
   !*** ./src/js/parts/feedbackSlider.js ***!
@@ -154,10 +209,10 @@ module.exports = accordion;
 /***/ (function(module, exports) {
 
 const feedbackSlider = () => {
-    let slideIndex = 1,
-        items = document.querySelectorAll(".feedback-slider-item"),
-        prev = document.querySelector(".main-prev-btn"),
-        next = document.querySelector(".main-next-btn");
+        let slideIndex = 1,
+            items = document.querySelectorAll(".feedback-slider-item"),
+            prev = document.querySelector(".main-prev-btn"),
+            next = document.querySelector(".main-next-btn");
 
     const showSlides = (n) => {
         if (n > items.length) {
@@ -172,36 +227,129 @@ const feedbackSlider = () => {
         });
         items[slideIndex - 1].style.display = "block";
     }
-
-    const plusSlides = (n) => {
+    const plusSlides = (n, auto=false) => {
         showSlides(slideIndex += n);
+        if (!auto) { 
+            clearInterval(sliderInterval);
+            sliderInterval = timer();
+        }
+        items[slideIndex - 1].classList.remove(n>0?"slideInRight":"slideInLeft");
+        items[slideIndex - 1].classList.add(n>0?"slideInLeft":"slideInRight");  
     }
-
     showSlides(slideIndex);
-
-    prev.addEventListener("click", () => {
-        clearInterval(sliderInterval);
-        plusSlides(-1);
-        items[slideIndex - 1].classList.remove("slideInLeft");
-        items[slideIndex - 1].classList.add("slideInRight");
-        }),
-
-        next.addEventListener("click", () => {
-        clearInterval(sliderInterval);
-        plusSlides(1);
-        items[slideIndex - 1].classList.remove("slideInRight");
-        items[slideIndex - 1].classList.add("slideInLeft");
-        });
-
-    let sliderInterval = setInterval (() => {
-        plusSlides(1);
-        items[slideIndex - 1].classList.remove("slideInRight");
-        items[slideIndex - 1].classList.add("slideInLeft");
-        }, 6000);
-    
-
+    prev.addEventListener("click", () => { plusSlides(-1 ) });
+    next.addEventListener("click", () => { plusSlides( 1 ) });
+    const timer = () => setInterval(()=> { plusSlides(1,1) }, 5000);
+    let sliderInterval = timer();
     }
 module.exports = feedbackSlider;
+
+/***/ }),
+
+/***/ "./src/js/parts/filter.js":
+/*!********************************!*\
+  !*** ./src/js/parts/filter.js ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+const filter = () => {
+    let menuItems = document.querySelectorAll('.portfolio-menu li'),
+        allItems = document.querySelector('.portfolio-menu .all'),
+        lovers = document.querySelector('.portfolio-menu .lovers'),
+        chef = document.querySelector('.portfolio-menu .chef'),
+        girl = document.querySelector('.portfolio-menu .girl'),
+        guy = document.querySelector('.portfolio-menu .guy'),
+        grandmother = document.querySelector('.portfolio-menu .grandmother'),
+        granddad = document.querySelector('.portfolio-menu .granddad'),
+
+        allPictures = document.querySelectorAll('.portfolio-wrapper .all'),
+        loversPictures = document.querySelectorAll('.portfolio-wrapper .lovers'),
+        chefPictures = document.querySelectorAll('.portfolio-wrapper .chef'),
+        girlPictures = document.querySelectorAll('.portfolio-wrapper .girl'),
+        guyPictures = document.querySelectorAll('.portfolio-wrapper .guy'),
+        noPictures = document.querySelector('.container .portfolio-no');
+
+    const hideAll = () => {
+        allPictures.forEach((elem) => {
+            elem.style.display = 'none';
+        });
+        noPictures.style.display = 'none';
+        menuItems.forEach((elem2)=> {
+            elem2.classList.remove('active');
+        }); 
+    }
+
+    const chooseItem = (btn, picturesType) => {
+        btn.addEventListener('click', () => {
+            hideAll();
+            picturesType.forEach((elem) => {   
+                btn.classList.add('active');
+                elem.style.display = 'block';
+            });
+        });
+    }
+
+    const emptyBlock = (btn, block) => {
+        btn.addEventListener('click', ()=> {
+            hideAll();
+            btn.classList.add('active');
+            block.style.display = 'block';
+        });
+    }
+
+    chooseItem(allItems,allPictures);
+    chooseItem(lovers,loversPictures);
+    chooseItem(chef,chefPictures);
+    chooseItem(girl,girlPictures);
+    chooseItem(guy,guyPictures);
+    emptyBlock(grandmother, noPictures);
+    emptyBlock(granddad, noPictures);
+}
+module.exports = filter;
+
+/***/ }),
+
+/***/ "./src/js/parts/popupGift.js":
+/*!***********************************!*\
+  !*** ./src/js/parts/popupGift.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+const popupGift = () => {
+    let gift = document.querySelector(".fixed-gift"),
+        popup = document.querySelector(".popup-gift"),
+        close = popup.querySelector(".popup-close");
+
+    const openPopup = () => {
+        pressedBtn = true;
+        popup.style.display = "block";
+        gift.style.display = "none";
+        document.body.style.overflow = "hidden";
+    }
+
+    const closePopup = () => {
+        popup.style.display = "none";
+        document.body.style.overflow = "";
+    }
+
+    gift.addEventListener("click", () => {
+    openPopup();
+    });
+
+    close.addEventListener("click", () => {
+    closePopup();
+    })
+
+    popup.addEventListener("click", (e) =>  {
+    if (!parentsOfElements(e.target, "popup-content") &&
+    !e.target.classList.contains("popup_close")) {
+        closePopup();
+    }
+    });
+}
+module.exports = popupGift;
 
 /***/ }),
 
@@ -215,10 +363,16 @@ module.exports = feedbackSlider;
 window.addEventListener('DOMContentLoaded', function () {
 
     let accordion = __webpack_require__(/*! ./parts/accordion.js */ "./src/js/parts/accordion.js"),
-        feedbackSlider = __webpack_require__(/*! ./parts/feedbackSlider.js */ "./src/js/parts/feedbackSlider.js");
+        feedbackSlider = __webpack_require__(/*! ./parts/feedbackSlider.js */ "./src/js/parts/feedbackSlider.js"),
+        calc = __webpack_require__(/*! ./parts/calc.js */ "./src/js/parts/calc.js"),
+        filter = __webpack_require__(/*! ./parts/filter.js */ "./src/js/parts/filter.js"),
+        popupGift = __webpack_require__(/*! ./parts/popupGift.js */ "./src/js/parts/popupGift.js")
 
     accordion();
     feedbackSlider();
+    calc();
+    filter();
+    popupGift();
 });
 
 
