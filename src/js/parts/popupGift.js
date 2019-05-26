@@ -17,13 +17,12 @@ const popupGift = () => {
 
     const parentsOfElements = (elem, click) => {
         let current = elem;
-        while (current != null){
-        if (current.classList.contains(click)){
-            return true;
-        }
-        current = current.parentElement;
-        }
-        return false;
+            while (current != null){
+            if (current.classList.contains(click)){
+                return true;
+            }
+            current = current.parentElement;
+            } return false;
     }
 
     gift.addEventListener("click", () => {
@@ -35,10 +34,10 @@ const popupGift = () => {
     })
 
     popup.addEventListener("click", (e) =>  {
-    if (!parentsOfElements(e.target, "popup-content") &&
-    !e.target.classList.contains("popup_close")) {
-        closePopup();
-    }
+        if (!parentsOfElements(e.target, "popup-content") &&
+            !e.target.classList.contains("popup_close")) {
+                closePopup();
+        }
     });
 }
 module.exports = popupGift;

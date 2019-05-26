@@ -310,6 +310,122 @@ module.exports = filter;
 
 /***/ }),
 
+/***/ "./src/js/parts/popupConsult.js":
+/*!**************************************!*\
+  !*** ./src/js/parts/popupConsult.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function popupConsult() {
+    let btns = document.querySelectorAll(".button-consultation"),
+        popup = document.querySelector(".popup-consultation"),
+        popupDesign = document.querySelector(".popup-design"),
+        popupGift = document.querySelector(".popup-gift"),
+        close = popup.querySelector(".popup-close"),
+        elemsIn = popup.querySelector("form").children;
+
+    const openPopup = () => {
+    popup.style.display = "block";
+    document.body.style.overflow = "hidden";
+        for(let i = 0; i < elemsIn.length; i++){
+            if(elemsIn[i] != status){
+            elemsIn[i].style.display = "block";
+            }
+        }
+    }
+
+    const closePopup = () => {
+    popup.style.display = "none";
+    document.body.style.overflow = "";
+    }
+
+    const parentsOfElements = (elem, click) => {
+    let current = elem;
+        while (current != null){
+            if (current.classList.contains(click)){
+            return true;
+            }
+            current = current.parentElement;
+        } return false;
+        }
+
+    btns.forEach((btn) => {
+        btn.addEventListener("click", function () {
+            openPopup();
+        });
+    });
+    close.addEventListener("click", function () {
+        closePopup();
+    });
+    popup.addEventListener("click", function (e) {
+        if (!parentsOfElements(e.target, "popup-content") &&
+        !e.target.classList.contains("popup_close")) {
+            closePopup();
+        }
+    });
+}
+module.exports = popupConsult;
+
+/***/ }),
+
+/***/ "./src/js/parts/popupDesign.js":
+/*!*************************************!*\
+  !*** ./src/js/parts/popupDesign.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+const popupDesign = () => {
+    let btns = document.querySelectorAll(".button-design"),
+        popup = document.querySelector(".popup-design"),
+        close = popup.querySelector(".popup-close"),
+        elemsIn = popup.querySelector("form").children;
+
+    const openPopup = () => {
+        popup.style.display = "block";
+        document.body.style.overflow = "hidden";
+        for(let i = 0; i < elemsIn.length; i++) {
+            if(elemsIn[i] != status) {
+                elemsIn[i].style.display = "block";
+            }
+        }
+    }
+
+    const closePopup = () => {
+        popup.style.display = "none";
+        document.body.style.overflow = "";
+    }
+
+    const parentsOfElements = (elem, click) => {
+    let current = elem;
+        while (current != null){
+            if (current.classList.contains(click)){
+                return true;
+            }
+            current = current.parentElement;
+        } return false;
+    }
+    
+    btns.forEach((btn) => { 
+        btn.addEventListener("click", function () {
+            openPopup()
+        });
+    });
+    close.addEventListener("click", function () {
+        closePopup();
+    });
+    popup.addEventListener("click", function (e) {
+        if (!parentsOfElements(e.target, "popup-content") &&
+        !e.target.classList.contains("popup_close")) {
+            closePopup();
+    }
+    });
+}
+module.exports = popupDesign;
+
+/***/ }),
+
 /***/ "./src/js/parts/popupGift.js":
 /*!***********************************!*\
   !*** ./src/js/parts/popupGift.js ***!
@@ -336,13 +452,12 @@ const popupGift = () => {
 
     const parentsOfElements = (elem, click) => {
         let current = elem;
-        while (current != null){
-        if (current.classList.contains(click)){
-            return true;
-        }
-        current = current.parentElement;
-        }
-        return false;
+            while (current != null){
+            if (current.classList.contains(click)){
+                return true;
+            }
+            current = current.parentElement;
+            } return false;
     }
 
     gift.addEventListener("click", () => {
@@ -354,10 +469,10 @@ const popupGift = () => {
     })
 
     popup.addEventListener("click", (e) =>  {
-    if (!parentsOfElements(e.target, "popup-content") &&
-    !e.target.classList.contains("popup_close")) {
-        closePopup();
-    }
+        if (!parentsOfElements(e.target, "popup-content") &&
+            !e.target.classList.contains("popup_close")) {
+                closePopup();
+        }
     });
 }
 module.exports = popupGift;
@@ -377,13 +492,17 @@ window.addEventListener('DOMContentLoaded', function () {
         feedbackSlider = __webpack_require__(/*! ./parts/feedbackSlider.js */ "./src/js/parts/feedbackSlider.js"),
         calc = __webpack_require__(/*! ./parts/calc.js */ "./src/js/parts/calc.js"),
         filter = __webpack_require__(/*! ./parts/filter.js */ "./src/js/parts/filter.js"),
-        popupGift = __webpack_require__(/*! ./parts/popupGift.js */ "./src/js/parts/popupGift.js")
+        popupGift = __webpack_require__(/*! ./parts/popupGift.js */ "./src/js/parts/popupGift.js"),
+        popupDesign = __webpack_require__(/*! ./parts/popupDesign.js */ "./src/js/parts/popupDesign.js"),
+        popupConsult = __webpack_require__(/*! ./parts/popupConsult.js */ "./src/js/parts/popupConsult.js");
 
     accordion();
     feedbackSlider();
     calc();
     filter();
     popupGift();
+    popupDesign();
+    popupConsult();
 });
 
 
