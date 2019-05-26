@@ -21,8 +21,8 @@ const popupDesign = () => {
 
     const parentsOfElements = (elem, click) => {
     let current = elem;
-        while (current != null){
-            if (current.classList.contains(click)){
+        while (current != null) {
+            if (current.classList.contains(click)) {
                 return true;
             }
             current = current.parentElement;
@@ -30,14 +30,14 @@ const popupDesign = () => {
     }
     
     btns.forEach((btn) => { 
-        btn.addEventListener("click", function () {
+        btn.addEventListener("click", () => {
             openPopup()
         });
     });
-    close.addEventListener("click", function () {
+    close.addEventListener("click", () => {
         closePopup();
     });
-    popup.addEventListener("click", function (e) {
+    popup.addEventListener("click", (e) => {
         if (!parentsOfElements(e.target, "popup-content") &&
         !e.target.classList.contains("popup_close")) {
             closePopup();

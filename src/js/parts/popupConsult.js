@@ -9,8 +9,8 @@ function popupConsult() {
     const openPopup = () => {
     popup.style.display = "block";
     document.body.style.overflow = "hidden";
-        for(let i = 0; i < elemsIn.length; i++){
-            if(elemsIn[i] != status){
+        for(let i = 0; i < elemsIn.length; i++) {
+            if(elemsIn[i] != status) {
             elemsIn[i].style.display = "block";
             }
         }
@@ -24,7 +24,7 @@ function popupConsult() {
     const parentsOfElements = (elem, click) => {
     let current = elem;
         while (current != null){
-            if (current.classList.contains(click)){
+            if (current.classList.contains(click)) {
             return true;
             }
             current = current.parentElement;
@@ -32,14 +32,14 @@ function popupConsult() {
         }
 
     btns.forEach((btn) => {
-        btn.addEventListener("click", function () {
+        btn.addEventListener("click", () => {
             openPopup();
         });
     });
-    close.addEventListener("click", function () {
+    close.addEventListener("click", () => {
         closePopup();
     });
-    popup.addEventListener("click", function (e) {
+    popup.addEventListener("click", (e) => {
         if (!parentsOfElements(e.target, "popup-content") &&
         !e.target.classList.contains("popup_close")) {
             closePopup();
