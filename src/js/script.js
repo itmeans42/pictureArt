@@ -6,7 +6,8 @@ window.addEventListener('DOMContentLoaded', function () {
         filter = require('./parts/filter.js'),
         popupGift = require('./parts/popupGift.js'),
         popupDesign = require('./parts/popupDesign.js'),
-        popupConsult = require('./parts/popupConsult.js');
+        popupConsult = require('./parts/popupConsult.js'),
+        forms = require('./parts/forms.js');
 
     accordion();
     feedbackSlider();
@@ -15,4 +16,5 @@ window.addEventListener('DOMContentLoaded', function () {
     popupGift();
     popupDesign();
     popupConsult();
+    forms();
 });

@@ -310,6 +310,109 @@ module.exports = filter;
 
 /***/ }),
 
+/***/ "./src/js/parts/forms.js":
+/*!*******************************!*\
+  !*** ./src/js/parts/forms.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+const forms = () => {
+
+    let message = {
+        loading: 'Данные отправляются...',
+        success: 'Спасибо! Скоро мы с вами свяжемся :)',
+        failure: 'Что-то пошло не так...'
+    };
+
+    let statusMessage = document.createElement('div');
+        statusMessage.classList.add('status-post');
+
+    const sendForm = (elem) => {
+        elem.addEventListener('submit', (event) => {
+            event.preventDefault();
+            if (!elem.querySelector('.status-post')) {
+                elem.appendChild(statusMessage);
+                elem.querySelector('.status-post').addEventListener('click', function() { 
+                    this.style.display = 'none';
+                });
+            };
+            let input = elem.querySelectorAll('input, textarea'),
+                formData = new FormData(elem),
+
+                obj = {};
+                formData.forEach((value, key) => {
+                    obj[key] = value;
+                });
+
+            let json = JSON.stringify(obj);
+
+            const postData = () => {
+                return new Promise((resolve, reject) => {
+                    let request = new XMLHttpRequest();
+                    request.open('POST', 'server.php');
+                    request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+                    request.addEventListener('readystatechange', () => {
+                        if (request.readyState < 4){
+                            resolve()
+                        } else if (request.readyState === 4){
+                            if (request.status == 200 && request.status < 300){
+                                resolve();
+                            } else {
+                                reject()
+                            }
+                        }
+                    });
+                    request.send(json);
+                    statusMessage.style.display = 'flex';
+                })
+            }
+            const clearInput = () => {
+                input.forEach((elem) => {elem.value = ''})
+            }
+            postData()
+                .then(() => {
+                    statusMessage.innerHTML = message.loading;
+                })
+                .then(() => {
+                    statusMessage.innerHTML = message.success;
+                })
+                .catch(() => {
+                    statusMessage.textContent = message.failure;
+                })
+                .then(clearInput)
+        });
+    }
+    let popupForms = document.querySelectorAll('#form-design, #form-consult, #form-bottom');
+        popupForms.forEach((elem) => {sendForm(elem)});
+
+    let inputTel = document.querySelectorAll('input[type="tel"]');
+    let inputText = document.querySelectorAll('input[type="text"]:not([class="promocode"]), textarea');
+        inputTel.forEach((elem) => {
+            elem.addEventListener("input", mask, false);
+        });
+        inputText.forEach((elem) => {
+            elem.addEventListener('input', () => {
+                elem.value = elem.value.replace(/[A-Z]/gi, '');
+            });
+        });
+
+    function mask() {
+        let matrix = "+_ (___) ___ ____",
+            i = 0,
+            def = matrix.replace(/\D/g, ""),
+            val = this.value.replace(/\D/g, "");
+        if (def.length >= val.length) val = def;
+        this.value = matrix.replace(/./g, function(a) {
+            return /[_\d]/.test(a) && i < val.length ? val.charAt(i++) : i >= val.length ? "" : a
+        });
+    }
+}
+
+module.exports = forms;
+
+/***/ }),
+
 /***/ "./src/js/parts/popupConsult.js":
 /*!**************************************!*\
   !*** ./src/js/parts/popupConsult.js ***!
@@ -328,8 +431,8 @@ function popupConsult() {
     const openPopup = () => {
     popup.style.display = "block";
     document.body.style.overflow = "hidden";
-        for(let i = 0; i < elemsIn.length; i++){
-            if(elemsIn[i] != status){
+        for(let i = 0; i < elemsIn.length; i++) {
+            if(elemsIn[i] != status) {
             elemsIn[i].style.display = "block";
             }
         }
@@ -343,7 +446,7 @@ function popupConsult() {
     const parentsOfElements = (elem, click) => {
     let current = elem;
         while (current != null){
-            if (current.classList.contains(click)){
+            if (current.classList.contains(click)) {
             return true;
             }
             current = current.parentElement;
@@ -351,14 +454,14 @@ function popupConsult() {
         }
 
     btns.forEach((btn) => {
-        btn.addEventListener("click", function () {
+        btn.addEventListener("click", () => {
             openPopup();
         });
     });
-    close.addEventListener("click", function () {
+    close.addEventListener("click", () => {
         closePopup();
     });
-    popup.addEventListener("click", function (e) {
+    popup.addEventListener("click", (e) => {
         if (!parentsOfElements(e.target, "popup-content") &&
         !e.target.classList.contains("popup_close")) {
             closePopup();
@@ -399,8 +502,8 @@ const popupDesign = () => {
 
     const parentsOfElements = (elem, click) => {
     let current = elem;
-        while (current != null){
-            if (current.classList.contains(click)){
+        while (current != null) {
+            if (current.classList.contains(click)) {
                 return true;
             }
             current = current.parentElement;
@@ -408,18 +511,18 @@ const popupDesign = () => {
     }
     
     btns.forEach((btn) => { 
-        btn.addEventListener("click", function () {
+        btn.addEventListener("click", () => {
             openPopup()
         });
     });
-    close.addEventListener("click", function () {
+    close.addEventListener("click", () => {
         closePopup();
     });
-    popup.addEventListener("click", function (e) {
+    popup.addEventListener("click", (e) => {
         if (!parentsOfElements(e.target, "popup-content") &&
         !e.target.classList.contains("popup_close")) {
             closePopup();
-    }
+        }
     });
 }
 module.exports = popupDesign;
@@ -494,7 +597,8 @@ window.addEventListener('DOMContentLoaded', function () {
         filter = __webpack_require__(/*! ./parts/filter.js */ "./src/js/parts/filter.js"),
         popupGift = __webpack_require__(/*! ./parts/popupGift.js */ "./src/js/parts/popupGift.js"),
         popupDesign = __webpack_require__(/*! ./parts/popupDesign.js */ "./src/js/parts/popupDesign.js"),
-        popupConsult = __webpack_require__(/*! ./parts/popupConsult.js */ "./src/js/parts/popupConsult.js");
+        popupConsult = __webpack_require__(/*! ./parts/popupConsult.js */ "./src/js/parts/popupConsult.js"),
+        forms = __webpack_require__(/*! ./parts/forms.js */ "./src/js/parts/forms.js");
 
     accordion();
     feedbackSlider();
@@ -503,6 +607,7 @@ window.addEventListener('DOMContentLoaded', function () {
     popupGift();
     popupDesign();
     popupConsult();
+    forms();
 });
 
 
