@@ -1,50 +1,28 @@
 const accordion = () => {
+   let accordionHeading = document.querySelectorAll('.accordion-heading'),
+       accordionBlock = document.querySelectorAll('.accordion-block');
 
-   let accordion = document.querySelectorAll('#accordion div'),
-      accordionBlock = document.querySelectorAll('.accordion-block'),
-      accordionHeading = document.querySelectorAll('.accordion-heading');
-
-   accordionBlock.forEach((elem) => {
-      setAccord(elem, 'add');  
+   accordionBlock.forEach((item) => {
+      item.style.display = 'none';
+      item.classList.add('animated');
+      item.classList.add('fadeInUp');
    });
-   
-   accordionHeading.forEach((elem2, index) => {
-      let accordionHeadingSpan = elem2.querySelector('span');     
 
-      elem2.addEventListener('click', () => {
-         setAccord(accordion[index], 'toggle');
-         accordion[index].style.marginBottom = '15px';
-         accordion[index].style.marginTop = '15px';
+let activePanel;
+accordionHeading.forEach((item, i, accordionHeadings) => {
+   item.addEventListener('click', function(e) {
+   this.classList.add('ui-accordion-header-active');
+   this.nextElementSibling.classList.add('ui-accordion-content-active');
+   this.nextElementSibling.style.display = 'block';
 
-         let currentIndex = index;
-         accordionHeadingSpan = accordionHeading[currentIndex].querySelector('span');
-         accordionHeadingSpan.classList.toggle('active');
-
-         accordionBlock.forEach((elem3, index2) => {
-               if(index2 != currentIndex) {
-                  setAccord(elem3, 'add');
-                  accordionHeadingSpan = accordionHeading[index2].querySelector('span');
-                  accordionHeadingSpan.classList.remove('active');    
-               }
-         });
-      });   
-   });  
-
-   function setAccord (element, action) {
-      if (action == 'add') {
-         element.classList.add('hidden-lg');
-         element.classList.add('hidden-md');   
-         element.classList.add('hidden-sm');   
-         element.classList.add('hidden-xs'); 
-      }
-      
-      if (action == 'toggle') {
-         element.classList.toggle('hidden-lg');
-         element.classList.toggle('hidden-md');   
-         element.classList.toggle('hidden-sm');   
-         element.classList.toggle('hidden-xs'); 
-      }
+   if (activePanel) {
+      activePanel.classList.remove('ui-accordion-header-active');
+      activePanel.nextElementSibling.classList.remove('ui-accordion-content-active');
+      activePanel.nextElementSibling.style.display = 'none';
    }
-}
+   activePanel = (activePanel === this) ? 0 : this;
+   });
+});
+};
 
 module.exports = accordion;

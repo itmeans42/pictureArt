@@ -1,93 +1,82 @@
 const forms = () => {
 
-    let message = {
-        loading: 'Данные отправляются...',
-        success: 'Спасибо! Скоро мы с вами свяжемся :)',
-        failure: 'Что-то пошло не так...'
-    };
-
-    let statusMessage = document.createElement('div');
-        statusMessage.classList.add('status-post');
-
     const sendForm = (elem) => {
-        elem.addEventListener('submit', (event) => {
+
+        let form = elem,
+            input = elem.querySelectorAll('input'),
+            statusMessage = document.createElement('div');
+            statusMessage.classList.add('status-message');
+
+        form.addEventListener('submit', (event) => {
+            let innerCode;
             event.preventDefault();
-            if (!elem.querySelector('.status-post')) {
-                elem.appendChild(statusMessage);
-                elem.querySelector('.status-post').addEventListener('click', function() { 
-                    this.style.display = 'none';
-                });
-            };
-            let input = elem.querySelectorAll('input, textarea'),
-                formData = new FormData(elem),
 
-                obj = {};
-                formData.forEach((value, key) => {
-                    obj[key] = value;
-                });
+        let formData = new FormData(elem),
+            obj = {};
 
-            let json = JSON.stringify(obj);
+            formData.forEach((value, key) => {
+                obj[key] = value;
+            });
+
+        let json = JSON.stringify(obj);
 
             const postData = () => {
-                return new Promise((resolve, reject) => {
+                return new Promise(function (resolve, reject) {
                     let request = new XMLHttpRequest();
-                    request.open('POST', 'server.php');
-                    request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-                    request.addEventListener('readystatechange', () => {
-                        if (request.readyState < 4){
-                            resolve()
-                        } else if (request.readyState === 4){
-                            if (request.status == 200 && request.status < 300){
-                                resolve();
-                            } else {
-                                reject()
-                            }
+                    request.open('POST', 'server.php'); 
+                    request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+                    innerCode = form.innerHTML;
+                    form.innerHTML = '';
+                    form.appendChild(statusMessage);
+
+                    request.addEventListener('readystatechange', function () {
+                        if (request.readyState < 4) {
+                            resolve();
+                        } else if (request.readyState == 4 && request.status == 200) {
+                            resolve();
+                        } else {
+                            reject();
                         }
-                    });
+
+                    });//request
                     request.send(json);
-                    statusMessage.style.display = 'flex';
-                })
-            }
+                });// return new Promise
+            } //postData
+
             const clearInput = () => {
                 input.forEach((elem) => {elem.value = ''})
             }
+            const hideForm = (status) => {
+                statusMessage.innerHTML = status;
+                let timeLog = 0;
+                let hideFormTimer = setInterval(function() {
+                    timeLog = timeLog + 20;
+                    if (timeLog == 2000) {
+                        form.innerHTML = innerCode;
+                        clearInput();
+                        if (form.className.indexOf('popup') != -1) {
+                            let popupClass = document.querySelector('.' + form.className.slice(0, -5));
+                            popupClass.style.display = 'none';
+                            document.querySelector('body').style.overflow = '';
+                        }
+                        clearInterval(hideFormTimer);
+                    }
+                }, 20);
+            }
             postData()
-                .then(() => {
-                    statusMessage.innerHTML = message.loading;
-                })
-                .then(() => {
-                    statusMessage.innerHTML = message.success;
-                })
-                .catch(() => {
-                    statusMessage.textContent = message.failure;
-                })
-                .then(clearInput)
+                    .then(() => {
+                        hideForm('<p>Отправляем...</p>');
+                    })
+                    .then(() => {
+                        hideForm('<p>Сообщение отправлено.<br> Ожидайте звонка.</p>');
+                    })
+                    .catch(() => {
+                        hideForm('<p>Ошибка!</p>');
+                    })
         });
     }
     let popupForms = document.querySelectorAll('#form-design, #form-consult, #form-bottom');
         popupForms.forEach((elem) => {sendForm(elem)});
-
-    let inputTel = document.querySelectorAll('input[type="tel"]');
-    let inputText = document.querySelectorAll('input[type="text"]:not([class="promocode"]), textarea');
-        inputTel.forEach((elem) => {
-            elem.addEventListener("input", mask, false);
-        });
-        inputText.forEach((elem) => {
-            elem.addEventListener('input', () => {
-                elem.value = elem.value.replace(/[A-Z]/gi, '');
-            });
-        });
-
-    function mask() {
-        let matrix = "+_ (___) ___ ____",
-            i = 0,
-            def = matrix.replace(/\D/g, ""),
-            val = this.value.replace(/\D/g, "");
-        if (def.length >= val.length) val = def;
-        this.value = matrix.replace(/./g, function(a) {
-            return /[_\d]/.test(a) && i < val.length ? val.charAt(i++) : i >= val.length ? "" : a
-        });
-    }
 }
-
 module.exports = forms;
